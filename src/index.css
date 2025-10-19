@@ -1,5 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap');
+/* if you host custom fonts, use @font-face with font-display: swap */
 @import "tailwindcss";
+
 
 html, body, #root {
   overflow-x: hidden;
+}
+
+
+html, body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, .hero-heading {
+  font-family: var(--font-heading);
+  line-height: 1.02;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+@font-face {
+  font-family: "Nativera";
+  src: url("/src/assets/fonts/Nativera-Regular.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GCEpicpro";
+  src: url("/src/assets/fonts/GC-Epicpro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "InterCustom";
+  src: url("/src/assets/fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-heading: "Nativera", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-subhead: "GCEpicpro", "InterCustom", system-ui;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+html { font-family: var(--font-body); }
+h1,h2,h3,h4,h5 { font-family: var(--font-heading); }
+h2,h3 { font-family: var(--font-subhead); }
+
+
+
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --accent-from: #06b6d4;
+  --accent-to: #8b5cf6;
+}
+
+.dark {
+  --bg: #04040a;
+  --panel: #061022;
+  --text: #e6eef8;
+  --muted: #9ca3af;
+  --accent-from: #06b6d4;
+  --accent-to: #8b5cf6;
 }
