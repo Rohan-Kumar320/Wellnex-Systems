@@ -76,6 +76,7 @@ import ComingSoon from "./components/sections/ComingSoon";
 import Waitlist from "./components/sections/Waitlist";
 import Footer from "./components/layout/Footer";
 import Preloader from "./components/ui/Preloader";
+import Contact from "./components/sections/Contact";
 
 function wait(ms) {
   return new Promise((res) => setTimeout(res, ms));
@@ -118,6 +119,7 @@ function RouterWrapper() {
         <Route path="/testimonials" element={<Testimonials navigateWithPreload={navigateWithPreload} />} />
         <Route path="/coming-soon" element={<ComingSoon navigateWithPreload={navigateWithPreload} />} />
         <Route path="/waitlist" element={<Waitlist navigateWithPreload={navigateWithPreload} />} />
+        <Route path="/contact" element={<Contact navigateWithPreload={navigateWithPreload} />} />
       </Routes>
       <Footer />
     </>
