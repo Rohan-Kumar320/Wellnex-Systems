@@ -174,9 +174,9 @@ const apps = [
     tech: ["React", "TailwindCSS", "Firebase", "Lottie", "Stripe"],
     accent: { from: "#06b6d4", to: "#06b6d4" },
     images: [
-      "/src/assets/images/soulworshipper1.png",
-      "/src/assets/images/soulworshipper2.jpg",
-      "/src/assets/images/soulworshipper3.jpg",
+      "/imagesapp/soulworshipper1.png",
+      "/imagesapp/soulworshipper2.jpg",
+      "/imagesapp/soulworshipper3.jpg",
     ]
   },
   {
@@ -194,9 +194,9 @@ const apps = [
     tech: ["React", "Node.js", "Postgres", "WebSockets", "Stripe"],
     accent: { from: "#f59e0b", to: "#ec4899" },
     images: [
-      "/src/assets/images/soulworshipper1.png",
-      "/src/assets/images/soulworshipper2.jpg",
-      "/src/assets/images/soulworshipper3.jpg",
+      "/imagesapp/soulworshipper1.png",
+      "/imagesapp/soulworshipper2.jpg",
+      "/imagesapp/soulworshipper3.jpg",
     ]
   }
 ];
