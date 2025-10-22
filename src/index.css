@@ -71,6 +71,18 @@ h2,h3 { font-family: var(--font-subhead); }
   --nav-border: rgba(0,0,0,0.06);
 }
 
+[data-theme="dark"] {
+  --bg: #06060a;
+  --text: #cfeefb;
+  --muted: #9ca3af;
+  --panel: #071026;
+  --nav-bg: rgba(5,5,5,0.95);
+  --nav-bg-scrolled: rgba(5,5,5,0.82);
+  --nav-border: rgba(255,255,255,0.04);
+  --accent-from: #06b6d4;
+  --accent-to: #06b6d4;
+}
+
 .dark {
   --bg: #04040a;
   --panel: #061022;
