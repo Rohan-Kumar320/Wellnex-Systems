@@ -1,7 +1,12 @@
     import { motion } from "framer-motion";
+import { useEffect } from "react";
 
     export default function ComingSoon() {
     const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.7 } } };
+
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}, [])
 
     return (
         <section id="coming-soon" className="py-20 bg-[#050514] text-gray-100">

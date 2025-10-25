@@ -1,13 +1,6 @@
-// src/components/sections/About.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-/**
- * About + Testimonials combined
- * - Longer, detailed content
- * - Animations (framer-motion) with reduced-motion fallback
- * - Listens to `preloader:exit-start` so page reveal can sync with preloader
- */
 
 const safePrefersReducedMotion = () => {
   try {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate as useRouterNavigate } from "react-router-dom";
-import logo from "../../assets/images/WS-logo.png";
+import logo from "../../assets/images/WS-logo2.png";
 import ThemeToggle from "../ui/ThemeToggle";
 
 export default function Navbar({ navigateWithPreload, debug = false }) {
@@ -19,6 +19,10 @@ export default function Navbar({ navigateWithPreload, debug = false }) {
   const routerNavigate = useRouterNavigate();
   const htmlRef = useRef(typeof document !== "undefined" ? document.documentElement : null);
   const observerRef = useRef(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -151,7 +155,7 @@ export default function Navbar({ navigateWithPreload, debug = false }) {
           <div className="flex items-center gap-3">
             <img src={logo} alt="Wellnex Systems logo" className="w-10 h-10 max-w-full rounded-md object-contain" />
             <div>
-              <div className="text-cyan-400 font-bold leading-none text-sm md:text-base">Wellnex</div>
+              <div className="text-shadow-fuchsia-50 font-bold leading-none text-sm md:text-base">Wellnex</div>
               <div className="text-xs" style={{ color: cssVars.muted, marginTop: -2 }}>Systems</div>
             </div>
           </div>

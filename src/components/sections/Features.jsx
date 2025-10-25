@@ -1,14 +1,7 @@
-// src/components/sections/Features.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-/**
- * Features + Roadmap merged
- * - Enhanced animations (framer-motion)
- * - Reduced-motion safe
- * - Defensive CSS var fallbacks
- * - Hover tilt + glow (CSS) without external libs
- */
+
 
 const feats = [
   {

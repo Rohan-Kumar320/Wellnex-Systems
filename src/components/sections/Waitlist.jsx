@@ -1,38 +1,50 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+
+const waitlistSchema = z.object({
+  name: z.string().min(2, "Please enter your full name"),
+  email: z.string().email("Please enter a valid email address"),
+});
+
 
 export default function Waitlist() {
   const shouldReduceMotion = useReducedMotion();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
-  const validate = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(waitlistSchema),
+    defaultValues: { name: "", email: "" },
+    mode: "onTouched",
+  });
 
-  const onSubmit = async (ev) => {
-    ev.preventDefault();
+  const onSubmit = async (data) => {
     setError("");
-
-    if (!name.trim()) return setError("Please enter your name.");
-    if (!validate(email)) return setError("Please enter a valid email address.");
-
     setLoading(true);
     setStatus("sending");
 
     try {
-      const FORM_ENDPOINT = "https://formspree.io/f/your-form-id"; // replace with your Formspree endpoint
+      const FORM_ENDPOINT = "https://formspree.io/f/your-form-id"; // replace
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, source: "Website Waitlist" }),
+        body: JSON.stringify({ name: data.name, email: data.email, source: "Website Waitlist" }),
       });
 
       if (res.ok) {
         setStatus("success");
-        setName("");
-        setEmail("");
+        reset();
       } else {
         const json = await res.json().catch(() => ({}));
         setStatus("error");
@@ -45,6 +57,10 @@ export default function Waitlist() {
       setLoading(false);
     }
   };
+
+  const motionProps = shouldReduceMotion
+    ? { initial: false, animate: false }
+    : { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, transition: { duration: 0.6, ease: "easeOut" } };
 
   return (
     <section
@@ -78,10 +94,8 @@ export default function Waitlist() {
 
         {/* Form / Success Box */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          {...motionProps}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
           className="mt-10 rounded-2xl shadow-xl p-8"
           style={{
             background: "var(--panel)",
@@ -90,8 +104,8 @@ export default function Waitlist() {
         >
           {status === "success" ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
+              animate={shouldReduceMotion ? false : { opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
               className="flex flex-col items-center gap-4 py-8"
             >
@@ -138,19 +152,21 @@ export default function Waitlist() {
             </motion.div>
           ) : (
             <form
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start"
+              noValidate
             >
               <div className="md:col-span-2">
                 <label className="text-xs mb-2 block" style={{ color: "var(--muted)" }}>
                   Full name
                 </label>
                 <input
+                  {...register("name")}
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
                   placeholder="Your full name"
-                  className="w-full px-4 py-3 rounded-lg border outline-none"
+                  className={`w-full px-4 py-3 rounded-lg border outline-none ${
+                    errors.name ? "ring-1 ring-red-400" : ""
+                  }`}
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
@@ -158,6 +174,9 @@ export default function Waitlist() {
                   }}
                   required
                 />
+                {errors.name && (
+                  <p className="mt-2 text-sm text-red-400">{errors.name.message}</p>
+                )}
 
                 <label
                   className="text-xs mt-4 mb-2 block"
@@ -166,11 +185,12 @@ export default function Waitlist() {
                   Email
                 </label>
                 <input
+                  {...register("email")}
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@domain.com"
-                  className="w-full px-4 py-3 rounded-lg border outline-none"
+                  className={`w-full px-4 py-3 rounded-lg border outline-none ${
+                    errors.email ? "ring-1 ring-red-400" : ""
+                  }`}
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
@@ -178,6 +198,9 @@ export default function Waitlist() {
                   }}
                   required
                 />
+                {errors.email && (
+                  <p className="mt-2 text-sm text-red-400">{errors.email.message}</p>
+                )}
 
                 {error && (
                   <div className="mt-3 text-sm" style={{ color: "var(--accent-to)" }}>

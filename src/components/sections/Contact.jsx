@@ -1,39 +1,58 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+const contactSchema = z.object({
+  name: z.string().min(2, "Please enter your full name"),
+  email: z.string().email("Please enter a valid email address"),
+  subject: z.string().min(3, "Please enter a subject"),
+  inquiry: z.enum(["General Inquiry", "Partnership", "Support Request", "Press / Media"]),
+  message: z.string().min(10, "Message should be at least 10 characters"),
+});
 
 export default function Contact() {
-  const [form, setForm] = useState({
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("idle");
+
+  const defaultValues = {
     name: "",
     email: "",
     subject: "",
     inquiry: "General Inquiry",
     message: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("idle");
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues,
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (data) => {
     setLoading(true);
     setStatus("sending");
     try {
       const res = await fetch("https://formspree.io/f/your-form-id", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(data),
       });
 
       if (res.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", subject: "", inquiry: "General Inquiry", message: "" });
+        reset(defaultValues);
       } else {
         setStatus("error");
       }
-    } catch {
+    } catch (err) {
       setStatus("error");
     } finally {
       setLoading(false);
@@ -123,7 +142,7 @@ export default function Contact() {
               </p>
             </motion.div>
           ) : (
-            <form onSubmit={onSubmit} className="grid grid-cols-1 gap-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6" noValidate>
               {/* Name + Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -135,20 +154,22 @@ export default function Contact() {
                     Full Name
                   </label>
                   <input
-                    type="text"
+                    {...register("name")}
                     id="name"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
+                    type="text"
                     placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-lg border outline-none"
+                    className={`w-full px-4 py-3 rounded-lg border outline-none ${
+                      errors.name ? "ring-1 ring-red-400" : ""
+                    }`}
                     style={{
                       background: "var(--bg)",
                       color: "var(--text)",
                       borderColor: "transparent",
                     }}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
+                  )}
                 </div>
 
                 <div>
@@ -160,20 +181,22 @@ export default function Contact() {
                     Email Address
                   </label>
                   <input
-                    type="email"
+                    {...register("email")}
                     id="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
+                    type="email"
                     placeholder="you@domain.com"
-                    className="w-full px-4 py-3 rounded-lg border outline-none"
+                    className={`w-full px-4 py-3 rounded-lg border outline-none ${
+                      errors.email ? "ring-1 ring-red-400" : ""
+                    }`}
                     style={{
                       background: "var(--bg)",
                       color: "var(--text)",
                       borderColor: "transparent",
                     }}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -187,20 +210,22 @@ export default function Contact() {
                   Subject
                 </label>
                 <input
+                  {...register("subject")}
                   type="text"
                   id="subject"
-                  name="subject"
-                  value={form.subject}
-                  onChange={handleChange}
-                  required
                   placeholder="Let’s talk about..."
-                  className="w-full px-4 py-3 rounded-lg border outline-none"
+                  className={`w-full px-4 py-3 rounded-lg border outline-none ${
+                    errors.subject ? "ring-1 ring-red-400" : ""
+                  }`}
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
                     borderColor: "transparent",
                   }}
                 />
+                {errors.subject && (
+                  <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
+                )}
               </div>
 
               {/* Inquiry Type */}
@@ -213,11 +238,11 @@ export default function Contact() {
                   Inquiry Type
                 </label>
                 <select
+                  {...register("inquiry")}
                   id="inquiry"
-                  name="inquiry"
-                  value={form.inquiry}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border outline-none cursor-pointer"
+                  className={`w-full px-4 py-3 rounded-lg border outline-none cursor-pointer ${
+                    errors.inquiry ? "ring-1 ring-red-400" : ""
+                  }`}
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
@@ -229,6 +254,9 @@ export default function Contact() {
                   <option>Support Request</option>
                   <option>Press / Media</option>
                 </select>
+                {errors.inquiry && (
+                  <p className="mt-1 text-sm text-red-400">{errors.inquiry.message}</p>
+                )}
               </div>
 
               {/* Message */}
@@ -241,20 +269,22 @@ export default function Contact() {
                   Message
                 </label>
                 <textarea
+                  {...register("message")}
                   id="message"
-                  name="message"
-                  value={form.message}
-                  onChange={handleChange}
-                  required
                   placeholder="Write your message here..."
                   rows="5"
-                  className="w-full px-4 py-3 rounded-lg border outline-none resize-none"
+                  className={`w-full px-4 py-3 rounded-lg border outline-none resize-none ${
+                    errors.message ? "ring-1 ring-red-400" : ""
+                  }`}
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
                     borderColor: "transparent",
                   }}
-                ></textarea>
+                />
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
+                )}
               </div>
 
               {/* Button */}
@@ -264,8 +294,7 @@ export default function Contact() {
                   disabled={loading}
                   className="px-6 py-3 rounded-full font-semibold shadow-xl transition-transform"
                   style={{
-                    background:
-                      "linear-gradient(90deg, var(--accent-from), var(--accent-to))",
+                    background: "linear-gradient(90deg, var(--accent-from), var(--accent-to))",
                     color: "black",
                   }}
                 >

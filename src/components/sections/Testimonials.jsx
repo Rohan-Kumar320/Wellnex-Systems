@@ -1,6 +1,7 @@
     import { useEffect, useState, useRef } from "react";
     import { motion } from "framer-motion";
 
+
     const testimonials = [
     { id: 1, quote: "Wellnex transformed how we run classes — easier scheduling and happier members.", name: "Ayesha R., Studio Owner", role: "Founder, ZenFit" },
     { id: 2, quote: "The AI recommendations finally made progress feel predictable and motivating.", name: "Omar K., User", role: "Athlete" },
